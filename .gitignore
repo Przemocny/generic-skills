@@ -1,0 +1,19 @@
+# Claude local settings
+.claude/
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+
+# User idea briefs (optional - users may want to commit these)
+.ideas/
+
+# Research and development files
+.research/
+.tasks/

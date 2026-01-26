@@ -1,0 +1,45 @@
+{
+  "name": "generic-skills",
+  "owner": {
+    "name": "CampusAI",
+    "email": "info@campus.ai"
+  },
+  "metadata": {
+    "description": "Reusable Agent Skills for Claude AI that enhance research capabilities, skill management, and agent configuration creation through systematic methodologies",
+    "version": "2.0.0"
+  },
+  "plugins": [
+    {
+      "name": "generic-skills",
+      "description": "Systematic agent skills for Claude AI: internet research with multi-source verification (general-research), skill creation through guided briefing (general-skill-maker), quality improvement with prioritized fixes (general-skill-refiner), feature enhancement through business-driven upgrades (general-skill-upgrader), and agent configuration generation (agentmd-creator).",
+      "version": "2.0.0",
+      "author": {
+        "name": "CampusAI",
+        "email": "info@campus.ai"
+      },
+      "homepage": "https://github.com/Przemocny/generic-skills",
+      "repository": "https://github.com/Przemocny/generic-skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "research",
+        "skill-creation",
+        "skill-improvement",
+        "quality-assurance",
+        "agent-configuration",
+        "systematic-methodology",
+        "best-practices",
+        "skill-management"
+      ],
+      "category": "productivity",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/general-research",
+        "./skills/general-skill-maker",
+        "./skills/general-skill-refiner",
+        "./skills/general-skill-upgrader",
+        "./skills/agentmd-creator"
+      ]
+    }
+  ]
+}
