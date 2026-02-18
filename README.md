@@ -74,6 +74,18 @@ Creates AI agent configuration files for general-purpose and business-domain age
 
 **Output:** Platform-specific configuration file(s) like AGENTS.md, CLAUDE.md, .cursor/rules/*.mdc
 
+### 🧠 context-collecter
+Collects, saves and loads personal and company context across 20 information layers. Manages private context (identity, values, goals, family, health, finances, hobbies, lifestyle, development, relationships) and company context (company, role, team, products, clients, processes, strategy, technology, finances, challenges). Always communicates in Polish.
+
+**Use when:**
+- User wants to save personal or company information for future sessions
+- Mentions "remember that...", "save that...", "note...", "add to context..."
+- Wants to collect context through guided interview ("gather context about...", "conduct interview about...")
+- Needs to load saved context ("mount context...", "load context about...", "what do you know about me...")
+- Wants to edit existing context entries ("correct...", "change that...", "remove entry...")
+
+**Output:** Context files in `~/.claude/context/private/` and `~/.claude/context/company/`
+
 ## Installation
 
 ### In Claude Code
@@ -94,6 +106,7 @@ Creates AI agent configuration files for general-purpose and business-domain age
    - "Review this skill" (triggers general-skill-refiner)
    - "Upgrade skill" (triggers general-skill-upgrader)
    - "Create agent config" (triggers agentmd-creator)
+   - "Remember that..." / "Save that..." (triggers context-collecter)
 
 ### Manual Installation
 
@@ -146,6 +159,12 @@ All skills follow systematic, phase-based workflows:
 5. **Apply Best Practices** - Ensure quality and completeness
 6. **Present** - Show config and installation instructions
 
+### context-collecter (4 modes)
+1. **Quick Save** - Save information to the right context layer with confirmation
+2. **Briefing** - Guided interview to collect context (deep or quick scan)
+3. **Load/Mount** - Load and present saved context layers silently
+4. **Edit/Delete** - Find, modify, or remove specific context entries
+
 ### Key Principles
 
 - **Systematic Over Ad-hoc** - Follow proven methodologies and frameworks
@@ -176,6 +195,16 @@ skills/
 AGENTS.md                              # Agent configurations
 CLAUDE.md
 .cursor/rules/*.mdc
+
+~/.claude/context/
+├── private/                           # 10 private context layers
+│   ├── tozsamosc.md
+│   ├── wartosci.md
+│   └── ...
+└── company/                           # 10 company context layers
+    ├── firma.md
+    ├── moja-rola.md
+    └── ...
 ```
 
 Each output includes:

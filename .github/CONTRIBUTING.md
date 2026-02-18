@@ -19,6 +19,7 @@ You can help by:
 - Improving refactoring patterns in `references/refactoring-patterns.md`
 - Adding upgrade types to `references/upgrade-types.md`
 - Adding platform support to `references/platforms.md` in agentmd-creator
+- Expanding briefing questions in `references/private-categories.md` or `references/company-categories.md` in context-collecter
 - Fixing typos or clarifying instructions in `SKILL.md` files
 - Adding examples of good workflows
 

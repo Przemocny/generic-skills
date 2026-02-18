@@ -53,13 +53,18 @@ skills/
 │       ├── upgrade-types.md
 │       ├── implementation-patterns.md
 │       └── examples.md
-└── agentmd-creator/               # Create AI agent configuration files
+├── agentmd-creator/               # Create AI agent configuration files
+│   ├── SKILL.md                   # Skill instructions
+│   └── references/                # Best practices, examples, platforms
+│       ├── best-practices.md
+│       ├── examples.md
+│       ├── platforms.md
+│       └── use-cases.md
+└── context-collecter/             # Personal and company context management
     ├── SKILL.md                   # Skill instructions
-    └── references/                # Best practices, examples, platforms
-        ├── best-practices.md
-        ├── examples.md
-        ├── platforms.md
-        └── use-cases.md
+    └── references/                # Briefing question libraries
+        ├── private-categories.md  # Questions for 10 private context layers
+        └── company-categories.md  # Questions for 10 company context layers
 ```
 
 **Output locations:**
@@ -68,6 +73,7 @@ skills/
 - **general-skill-maker:** `skills/[skill-name]/` containing new skill directory with SKILL.md and references
 - **general-skill-upgrader:** `.tasks/skill-upgrade-[skill-name]-[date]/` containing upgrade reports and changes
 - **agentmd-creator:** `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/*.mdc`, or platform-specific config files
+- **context-collecter:** `~/.claude/context/private/` (10 private layers) and `~/.claude/context/company/` (10 company layers)
 
 ---
 
@@ -351,6 +357,52 @@ skills/
 
 ---
 
+### 6. context-collecter
+
+**Purpose:** Collect, save and load personal and company context across 20 information layers. Always communicates in Polish.
+
+**When to use:**
+- User wants to save information for future sessions (personal or company)
+- User says "zapamiętaj że...", "zapisz że...", "zanotuj...", "dodaj do kontekstu..."
+- User wants guided interview to fill context layers: "zbierz kontekst o...", "przeprowadź wywiad o..."
+- User wants to load saved context: "zamontuj kontekst...", "załaduj kontekst...", "co wiesz o mnie..."
+- User wants to edit or delete context entries: "popraw...", "zmień to że...", "usuń wpis..."
+
+**What it does:**
+- Manages context through 4 modes:
+  - **Mode 1: Quick Save** - Analyzes message, picks most likely layer, checks for conflicts/duplicates, asks for confirmation before saving
+  - **Mode 2: Briefing** - Guided interview (deep or quick scan) using question libraries from references/
+  - **Mode 3: Load/Mount** - Silently loads requested layers, confirms what was loaded, checks for expired entries
+  - **Mode 4: Edit/Delete** - Finds specific entry, shows it to user, applies change after confirmation
+- Stores data in structured Markdown files with `<!-- static/dynamic | date | deadline -->` annotations
+- Follows cross-layer links `[[layer/name]]` automatically
+- Alerts on expired `dynamic` entries at every load
+
+**Key behaviors:**
+- ALWAYS asks for confirmation before saving (proposes layer name, waits for OK)
+- ALWAYS forces confirmation before deleting entries
+- Checks for conflicts and duplicates before writing
+- Asks one question at a time during briefing
+- Loads context silently (no raw file dump) then confirms briefly what was loaded
+- Communicates exclusively in Polish
+
+**Context layers:**
+- **Private (10):** `tozsamosc`, `wartosci`, `cele`, `rodzina`, `zdrowie`, `finanse-osobiste`, `hobby`, `styl-zycia`, `rozwoj`, `relacje`
+- **Company (10):** `firma`, `moja-rola`, `zespol`, `produkty`, `klienci`, `procesy`, `strategia`, `technologia`, `finanse-firmy`, `wyzwania`
+
+**Output:** Context files in `~/.claude/context/private/` and `~/.claude/context/company/`
+
+**Triggers:**
+- "Zapamiętaj że..."
+- "Zapisz że..."
+- "Zbierz kontekst o..."
+- "Zamontuj kontekst..."
+- "Co wiesz o mnie?"
+- "Załaduj kontekst firmowy"
+- "Popraw wpis o..."
+
+---
+
 ## Skill Workflows
 
 All skills follow systematic, phase-based workflows:
@@ -541,6 +593,40 @@ All skills follow systematic, phase-based workflows:
 - Offer customization suggestions
 - Document testing and verification steps
 
+### context-collecter Workflow (4 modes)
+
+**Mode 1: Quick Save**
+- Analyze message content, determine which layer(s) it belongs to
+- Load 1-2 most likely layers
+- Check for expired dynamic entries (prompt user if any found)
+- Check for conflicts or duplicates in existing data
+- Propose layer with confirmation: "Chcę to zapisać na warstwie [name]. OK?"
+- If conflict found: show existing entry, ask to overwrite/append/skip
+- After confirmation: write entry with `<!-- static/dynamic | date -->` annotation
+
+**Mode 2: Briefing**
+- Identify target layer from user message
+- Load existing data from that layer + follow `[[links]]`
+- Assess data volume → propose deep interview (few/no data) or quick scan (lots of data)
+- Ask questions ONE AT A TIME, wait for answer before next
+- After each answer: propose layer, confirm, save
+- Summarize what was collected at the end
+
+**Mode 3: Load/Mount**
+- If scope unclear: ask "Co chcesz załadować? Wszystkie warstwy, kategorię czy temat?"
+- Load requested layers, follow `[[links]]`
+- Load silently (no raw content dump), confirm briefly: "Kontekst załadowany (X warstw)."
+- Check all loaded layers for expired dynamic entries
+
+**Mode 4: Edit/Delete**
+- Identify target layer
+- Load current content, find relevant entry
+- Show entry to user: "Znalazłem: '[content]' — to ten wpis?"
+- Wait for confirmation
+- For edit: show proposed change, wait for approval
+- For delete: force confirmation ("Usunąć trwale? Tego nie można cofnąć.")
+- Apply change and save
+
 ---
 
 ## Skill Usage Patterns
@@ -578,6 +664,12 @@ All skills can be used independently:
 - Works for any platform (Cursor, Claude, Windsurf, etc.)
 - Can create general-purpose or domain-specific agents
 - Generates platform-appropriate file format automatically
+
+**context-collecter:**
+- Use to build persistent memory about user, team, and company
+- Four modes: Quick Save, Briefing, Load/Mount, Edit/Delete
+- Manages 20 context layers (10 private + 10 company)
+- Always communicates in Polish
 
 ### Complementary Usage
 
@@ -906,6 +998,26 @@ No special commands needed - just describe what you want to do.
 - Business workflow examples
 - Role-specific configurations
 - Team vs solo agent considerations
+
+### context-collecter Contains:
+
+**SKILL.md** (~207 lines)
+- Overview and data storage structure
+- 20 context layer definitions (private + company)
+- File format specification (static/dynamic annotations)
+- 4 mode workflows (Quick Save, Briefing, Load/Mount, Edit/Delete)
+- Cross-layer linking rules
+- Expired entry handling
+
+**references/private-categories.md**
+- Briefing questions for all 10 private layers
+- Two question modes per layer: quick scan and deep interview
+- Follow-up probing questions for each category
+
+**references/company-categories.md**
+- Briefing questions for all 10 company layers
+- Two question modes per layer: quick scan and deep interview
+- Follow-up probing questions for each category
 
 ---
 
